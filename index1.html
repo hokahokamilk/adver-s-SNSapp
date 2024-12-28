@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログインフォーム</title>
+</head>
+<body>
+  <h2>ログイン</h2>
+  <form id="loginForm">
+    <div>
+      <label for="username">ユーザー名:</label>
+      <input type="text" id="username" required minlength="3" />
+    </div>
+    <div>
+      <label for="password">パスワード:</label>
+      <input type="password" id="password" required minlength="6" />
+    </div>
+    <button type="submit">ログイン</button>
+  </form>
+
+  <!-- Loading Spinner or Message -->
+  <div id="loading" style="display: none;">読み込み中...</div>
+  
+  <!-- Result message -->
+  <p id="message"></p>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const messageElement = document.getElementById('message');
+      const loadingElement = document.getElementById('loading');
+      
+      // Show loading message
+      loadingElement.style.display = 'block';
+      messageElement.textContent = '';  // Clear any previous messages
+
+      try {
+        // Send login request
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // メッセージをresultから取得
+            messageElement.textContent = result.message || 'ログイン成功！';
+            messageElement.style.color = 'green';
+
+            // HTMLファイルを開く（リダイレクトする）
+            window.location.href = '/Users/hokahokagohann/Desktop/frontend/profile.html'; // 開きたいHTMLファイルのパスを指定
+        } else {
+          // Failure
+          messageElement.textContent = result.message || 'ログインに失敗しました。';
+          messageElement.style.color = 'red';
+        }
+      } catch (error) {
+        // Handle network or other errors
+        console.error('Error:', error);
+        messageElement.textContent = 'ネットワークエラーが発生しました。後で再試行してください。';
+        messageElement.style.color = 'red';
+      } finally {
+        // Hide loading message
+        loadingElement.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

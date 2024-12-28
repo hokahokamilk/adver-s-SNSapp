@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プロフィール</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .container {
+      width: 350px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .form-group button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+    }
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+    #message {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>プロフィール</h2>
+
+    <!-- プロフィール表示 -->
+    <div id="profileInfo">
+      <p><strong>ユーザー名:</strong> <span id="username"></span></p>
+      <p><strong>メールアドレス:</strong> <span id="email"></span></p>
+      <p><strong>自己紹介:</strong> <span id="bio"></span></p>
+    </div>
+
+    <!-- プロフィール更新フォーム -->
+    <div id="profileEdit" style="display: none;">
+      <div class="form-group">
+        <label for="editUsername">ユーザー名:</label>
+        <input type="text" id="editUsername" />
+      </div>
+      <div class="form-group">
+        <label for="editEmail">メールアドレス:</label>
+        <input type="email" id="editEmail" />
+      </div>
+      <div class="form-group">
+        <label for="editBio">自己紹介:</label>
+        <textarea id="editBio"></textarea>
+      </div>
+      <div class="form-group">
+        <button id="saveBtn">保存</button>
+      </div>
+      <p id="message"></p>
+    </div>
+
+    <!-- 編集ボタン -->
+    <button id="editBtn">プロフィールを編集</button>
+  </div>
+
+  <script>
+    // ユーザーデータ（仮データ）
+    let userData = {
+      username: 'taro_yamada',
+      email: 'taro@example.com',
+      bio: 'こんにちは！私はタロウです。趣味は読書と旅行です。'
+    };
+
+    // 初期データの表示
+    function displayProfile() {
+      document.getElementById('username').textContent = userData.username;
+      document.getElementById('email').textContent = userData.email;
+      document.getElementById('bio').textContent = userData.bio;
+    }
+
+    // 編集ボタンがクリックされたとき
+    document.getElementById('editBtn').addEventListener('click', function() {
+      document.getElementById('profileInfo').style.display = 'none';
+      document.getElementById('profileEdit').style.display = 'block';
+
+      // 現在のプロフィールデータを編集フォームにセット
+      document.getElementById('editUsername').value = userData.username;
+      document.getElementById('editEmail').value = userData.email;
+      document.getElementById('editBio').value = userData.bio;
+    });
+
+    // 保存ボタンがクリックされたとき
+    document.getElementById('saveBtn').addEventListener('click', async function() {
+      // 編集されたデータを取得
+      const updatedUsername = document.getElementById('editUsername').value;
+      const updatedEmail = document.getElementById('editEmail').value;
+      const updatedBio = document.getElementById('editBio').value;
+
+      // バリデーション（例: 空の値がないか）
+      if (!updatedUsername || !updatedEmail || !updatedBio) {
+        document.getElementById('message').textContent = 'すべてのフィールドを入力してください。';
+        document.getElementById('message').style.color = 'red';
+        return;
+      }
+
+      // 更新処理（バックエンドと連携する部分）
+      try {
+        // サーバーに更新リクエストを送信（仮APIエンドポイント）
+        const response = await fetch('http://localhost:3000/updateProfile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: updatedUsername,
+            email: updatedEmail,
+            bio: updatedBio
+          })
+        });
+
+        const result = await response.json();
+
+        // 成功した場合、画面に反映
+        if (response.ok) {
+          userData = {
+            username: updatedUsername,
+            email: updatedEmail,
+            bio: updatedBio
+          };
+          displayProfile();
+          document.getElementById('message').textContent = 'プロフィールが更新されました。';
+          document.getElementById('message').style.color = 'green';
+          document.getElementById('profileInfo').style.display = 'block';
+          document.getElementById('profileEdit').style.display = 'none';
+        } else {
+          document.getElementById('message').textContent = result.message || 'エラーが発生しました。';
+          document.getElementById('message').style.color = 'red';
+        }
+      } catch (error) {
+        document.getElementById('message').textContent = 'サーバーとの通信に失敗しました。';
+        document.getElementById('message').style.color = 'red';
+      }
+    });
+
+    // 初期プロフィールデータを表示
+    displayProfile();
+  </script>
+</body>
+</html>
