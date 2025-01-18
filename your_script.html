@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stable Diffusion API - Image Generation</title>
+</head>
+<body>
+
+<h1>Stable Diffusion 3.5 で画像を生成する</h1>
+
+<!-- 画像選択 -->
+<input type="file" id="inputImage" accept="image/*">
+<!-- プロンプト入力 -->
+<textarea id="prompt" placeholder="プロンプトを入力してください..."></textarea>
+<!-- 画像生成ボタン -->
+<button onclick="startGeneration()">画像を生成</button>
+
+<!-- 生成された画像を表示する場所 -->
+<div id="generatedImageContainer"></div>
+
+<script src="your_script.js"></script>
+</body>
+</html>
