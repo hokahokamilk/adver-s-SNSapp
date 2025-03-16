@@ -58,7 +58,7 @@ CREATE TABLE archive_metadata (
 // Amazon DynamoDB Tables using AWS SDK
 import { DynamoDBClient, CreateTableCommand } from "@aws-sdk/client-dynamodb";
 
-const client = new DynamoDBClient({ region: "us-east-1" });
+const client = new DynamoDBClient({ region: "ap-northeast-1" });
 
 await client.send(new CreateTableCommand({
     TableName: "ReactionCounts",
