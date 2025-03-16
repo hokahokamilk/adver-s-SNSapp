@@ -24,9 +24,9 @@ await connection.execute(`
 CREATE TABLE threads (
     thread_id VARCHAR(255) PRIMARY KEY,
     thread_name VARCHAR(255) NOT NULL,
-    created_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     genre_tag VARCHAR(100) NOT NULL,
-    last_posted_at DATETIME NOT NULL,
+    last_posted_at DATETIME NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     deletion_flag BOOLEAN NOT NULL DEFAULT FALSE
 );
 `);
@@ -37,7 +37,7 @@ CREATE TABLE posts (
     thread_id VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    posted_at DATETIME NOT NULL,
+    posted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     image_url VARCHAR(2083),
     FOREIGN KEY (thread_id) REFERENCES threads(thread_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
@@ -48,8 +48,8 @@ await connection.execute(`
 CREATE TABLE archive_metadata (
     thread_id VARCHAR(255) PRIMARY KEY,
     archive_file_location VARCHAR(2083) NOT NULL,
-    deleted_at DATETIME NOT NULL,
-    archive_created_at DATETIME NOT NULL,
+    deleted_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    archive_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     archive_size BIGINT NOT NULL,
     restore_flag BOOLEAN NOT NULL DEFAULT FALSE
 );
