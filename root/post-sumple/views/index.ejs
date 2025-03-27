@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>スレッド一覧</title>
+</head>
+<body>
+  <h1>スレッド一覧</h1>
+  <% if (threads && threads.length > 0) { %>
+    <ul>
+      <% threads.forEach(thread => { %>
+        <li><a href="/thread/<%= thread.thread_id %>"><%= thread.thread_name %></a></li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>スレッドがありません。</p>
+  <% } %>
+  <a href="/create-thread">スレッドを作成する</a>
+</body>
+</html>
+

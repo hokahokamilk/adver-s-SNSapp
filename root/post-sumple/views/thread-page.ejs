@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title><%= threadName %> - Thread</title>
+</head>
+<body>
+  <header>
+    <h1><%= threadName %></h1> <!-- スレッド名を表示 -->
+    <a href="/">スレッド一覧に戻る</a>
+  </header>
+
+  <!-- スレッド削除ボタン -->
+  <section>
+    <form action="/delete-thread" method="POST" onsubmit="return confirm('スレッド「<%= threadName %>」を削除しますか？');">
+      <input type="hidden" name="thread_id" value="<%= threadId %>">
+      <button type="submit">スレッドを削除</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>投稿一覧</h2>
+    <% if (posts.length > 0) { %>
+      <ul>
+        <% posts.forEach(post => { %>
+          <li>
+            <p><%= post.content %></p>
+            <small><%= new Date(post.posted_at).toLocaleString() %></small>
+
+            <!-- 投稿削除ボタン -->
+            <form action="/delete-post" method="POST" onsubmit="return confirm('投稿を削除しますか？');">
+              <input type="hidden" name="post_id" value="<%= post.post_id %>">
+              <input type="hidden" name="thread_id" value="<%= threadId %>"> <!-- 投稿が所属するスレッドID -->
+              <button type="submit">投稿を削除</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>まだ投稿はありません。</p>
+    <% } %>
+  </section>
+
+  <section>
+    <h3>投稿を作成する</h3>
+    <form action="/create-post" method="POST">
+      <input type="hidden" name="thread_id" value="<%= threadId %>">
+      <textarea name="content" required></textarea>
+      <button type="submit">投稿</button>
+    </form>
+  </section>
+</body>
+</html>
